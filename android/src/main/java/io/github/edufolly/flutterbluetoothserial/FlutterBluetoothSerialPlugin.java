@@ -893,25 +893,24 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                     break;
 
                 case "getBondedDevices":
-                    ensurePermissions(granted -> {
-                        if (!granted) {
-                            result.error("no_permissions", "discovering other devices requires location access permission", null);
-                            return;
-                        }
+                    // ensurePermissions(granted -> {
+                    //     if (!granted) {
+                    //         result.error("no_permissions", "discovering other devices requires location access permission", null);
+                    //         return;
+                    //     }
+                    // });
 
-                        List<Map<String, Object>> list = new ArrayList<>();
-                        for (BluetoothDevice device : bluetoothAdapter.getBondedDevices()) {
-                            Map<String, Object> entry = new HashMap<>();
-                            entry.put("address", device.getAddress());
-                            entry.put("name", device.getName());
-                            entry.put("type", device.getType());
-                            entry.put("isConnected", checkIsDeviceConnected(device));
-                            entry.put("bondState", BluetoothDevice.BOND_BONDED);
-                            list.add(entry);
-                        }
-
-                        result.success(list);
-                    });
+                    List<Map<String, Object>> list = new ArrayList<>();
+                    for (BluetoothDevice device : bluetoothAdapter.getBondedDevices()) {
+                        Map<String, Object> entry = new HashMap<>();
+                        entry.put("address", device.getAddress());
+                        entry.put("name", device.getName());
+                        entry.put("type", device.getType());
+                        entry.put("isConnected", checkIsDeviceConnected(device));
+                        entry.put("bondState", BluetoothDevice.BOND_BONDED);
+                        list.add(entry);
+                    }
+                    result.success(list);
                     break;
 
                 case "isDiscovering":
@@ -919,22 +918,21 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                     break;
 
                 case "startDiscovery":
-                    ensurePermissions(granted -> {
-                        if (!granted) {
-                            result.error("no_permissions", "discovering other devices requires location access permission", null);
-                            return;
-                        }
-
+                    // ensurePermissions(granted -> {
+                    //     if (!granted) {
+                    //         result.error("no_permissions", "discovering other devices requires location access permission", null);
+                    //         return;
+                    //     }
+                    // });
+                    {
                         Log.d(TAG, "Starting discovery");
                         IntentFilter intent = new IntentFilter();
                         intent.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
                         intent.addAction(BluetoothDevice.ACTION_FOUND);
                         activeContext.registerReceiver(discoveryReceiver, intent);
-
                         bluetoothAdapter.startDiscovery();
-
                         result.success(null);
-                    });
+                    }
                     break;
 
                 case "cancelDiscovery":
